@@ -16,10 +16,8 @@ from libs.person_trackers import PersonTrackers, TrackableObject
 from libs.validate import validate
 from openvino.inference_engine import IENetwork, IECore
 
-
 class LineCrossing(object):
     results = {"In": 0, "Out": 0}
-
     def __init__(self):
         config_file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.json")
         with open(config_file_path) as f:
@@ -32,6 +30,7 @@ class LineCrossing(object):
         self.model_modelfile_reid = cfg.get("reidentification_model_weights")
         self.model_configfile_reid = cfg.get("reidentification_model_description")
         self.coords = cfg.get("coords")
+#         self.adjustCoordinates()
         self.results = {}
         # OPENVINO VARS
         self.ov_input_blob = None
@@ -84,8 +83,15 @@ class LineCrossing(object):
         except Exception as e:
             raise Exception(f"Load Openvino reidentification error:{e}")
 
+    def angleCoordinates(self):
+        print('here', self.coords)
+        self.coords[0][0]=self.coords[0][0]-10
+        self.coords[1][1]=self.coords[1][1]+10
+        return self.coords
+
     def config_env(self, frame):
         h, w = frame.shape[:2]
+#         self.angleCoordinates()
         door_coords = ((int(self.coords[0][0] * w / 100), int(self.coords[0][1] * h / 100)),
                        (int(self.coords[1][0] * w / 100), int(self.coords[1][1] * h / 100)))
         self.door_line = InOutCalculator(door_coords)
