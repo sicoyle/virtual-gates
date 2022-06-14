@@ -61,3 +61,10 @@ class Draw:
             cv2.putText(frame, text, (10, ((i * 20) + 100)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.6, COLOR["pink"], 2)
 
+    @staticmethod
+    def dataAverage(frame, data):
+        for (i, (k, v)) in enumerate(data.items()):
+            text = "{}: {}".format(k, v)
+            cv2.putText(frame, text, (10, ((i * 20) + 140)),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, COLOR["white"], 2)
+

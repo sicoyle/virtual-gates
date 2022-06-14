@@ -20,6 +20,7 @@ class LineCrossing(object):
     results = {"In": 0, "Out": 0}
     results2 = {"In": 0, "Out": 0}
     results3 = {"In": 0, "Out": 0}
+    average = {"In": 0, "Out": 0}
     def __init__(self):
         config_file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.json")
         with open(config_file_path) as f:
@@ -196,6 +197,7 @@ class LineCrossing(object):
         Draw.data(frame, LineCrossing.results)
         Draw.dataBelow(frame, LineCrossing.results2)
         Draw.dataBelow2(frame, LineCrossing.results3)
+        Draw.dataAverage(frame, LineCrossing.average)
 
         return frame
 
@@ -213,6 +215,8 @@ class LineCrossing(object):
             frame = self.process_frame(frame)
             self.render(frame)
 
+def average(val1, val2, val3):
+    return (val1 + val2 + val3) / 3
 
 def callback_calc(line, first, last):
     line_calc = InOutCalculator(line, first)
@@ -221,10 +225,12 @@ def callback_calc(line, first, last):
     if r == "P":
         print(f"Result Positive({r}) direction  --> In count")
         LineCrossing.results["In"] += 1
+        LineCrossing.average["In"] = average(LineCrossing.results["In"], LineCrossing.results2["In"], LineCrossing.results3["In"])
 
     elif r == "N":
         print(f"Result Negative({r}) direction --> Out count")
         LineCrossing.results["Out"] += 1
+        LineCrossing.average["Out"] = average(LineCrossing.results["Out"], LineCrossing.results2["Out"], LineCrossing.results3["Out"])
 
 def callback2_calc(line_above, first, last):
     line2_calc = InOutCalculator(line_above, first)
@@ -233,10 +239,12 @@ def callback2_calc(line_above, first, last):
     if r == "P":
         print(f"Result Positive({r}) direction  --> In count")
         LineCrossing.results2["In"] += 1
+        LineCrossing.average["In"] = average(LineCrossing.results["In"], LineCrossing.results2["In"], LineCrossing.results3["In"])
 
     elif r == "N":
         print(f"Result Negative({r}) direction --> Out count")
         LineCrossing.results2["Out"] += 1
+        LineCrossing.average["Out"] = average(LineCrossing.results["Out"], LineCrossing.results2["Out"], LineCrossing.results3["Out"])
 
 def callback3_calc(line_below, first, last):
     line3_calc = InOutCalculator(line_below, first)
@@ -245,10 +253,12 @@ def callback3_calc(line_below, first, last):
     if r == "P":
         print(f"Result Positive({r}) direction  --> In count")
         LineCrossing.results3["In"] += 1
+        LineCrossing.average["In"] = average(LineCrossing.results["In"], LineCrossing.results2["In"], LineCrossing.results3["In"])
 
     elif r == "N":
         print(f"Result Negative({r}) direction --> Out count")
         LineCrossing.results3["Out"] += 1
+        LineCrossing.average["Out"] = average(LineCrossing.results["Out"], LineCrossing.results2["Out"], LineCrossing.results3["Out"])
 
 if __name__ == '__main__':
     try:
