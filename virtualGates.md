@@ -4,8 +4,8 @@ To angle the line of interest (LOI), uncomment line 98 of capacitylimit.py.
 A future optimization could be to add a flag to toggle between the different types of lines of interest implementations.
 
 ## Directions
-In - people going bottom to top in the video in direction
-Out - people going top to bottom in the video in direction
+- In - people going bottom to top in the video in direction
+- Out - people going top to bottom in the video in direction
 
 ## Implemented Virtual Gates
 
@@ -15,16 +15,41 @@ Out - people going top to bottom in the video in direction
 4. 2D vs 3D - TODO?
 
 ### Straight Line Results
-TODO
+Difference for both counts if off by one here.
+
+The table below was captured using `072352396-people-pedestrian-zone.mp4`,
+and the coordinate configuration set to `"coords": [[20, 45], [40, 45]]` for the LOI.
+
+| Line of Interest        | In - Out Count |
+|-------------------------|----------------|
+| Single line - red       | 4 - 6          |
+| ----------------------- |----------------|
+| My ground truth         | 3 - 5          |
+
+Pictured below is what the final frame looks like for a single horizontal line for the LOI.
+
+![FinalFrame](./doc/images/singleLOI.jpg)
 
 ### Angled Line Results
-TODO
+
+#### Single Angled Lines
+Difference for both counts is off by a lot here.
+> Note: This one was harder to determine the ground truth for a variety of reasons.
+
+The table below was captured using `072352396-people-pedestrian-zone.mp4`,
+and the coordinate configuration set to `"coords": [[30, 45], [40, 45]]` for the LOI.
+
+| Line of Interest        | In - Out Count   |
+|-------------------------|------------------|
+| Angled line - red       | 1 - 5            |
+| ----------------------- | ---------------- |
+| My ground truth         | 3 - 4            |
 
 ### Multiple Line Results
 It appears that averaging the results does result in a better in/out count in this case.
 
 The table below was captured using `072352396-people-pedestrian-zone.mp4`,
-and the coordinates configuration set to `"coords": [[20, 45], [40, 45]]` for the LOI.
+and the coordinate configuration set to `"coords": [[20, 45], [40, 45]]` for the LOI.
 
 | Line of Interest      | In - Out Count |
 |-----------------------|----------------|
@@ -35,18 +60,27 @@ and the coordinates configuration set to `"coords": [[20, 45], [40, 45]]` for th
 | Average count         | 3.66 - 5.33    |
 | My ground truth       | 3 - 5          |
 
-Pictured below if what I considered to be my ground truth counts.
+Pictured below is what I considered to be my ground truth counts.
 
-![SamGroundTruth](./doc/images/SamGroundTruth.jpg)
+![SamGroundTruth](./doc/images/samGroundTruthMultLOI.jpg)
 
 People circled in purple were counted as `In`.
 People circled in blue were counted as `Out`.
+
+> Note: To toggle between line counts, comment out the corresponding lines from line 195-201 as needed of capacitylimit.py.
 
 ### 2D vs 3D Line Results
 I will check out Go solutions before returning back here for exploration.
 
 
-#### Other Insights
+## Insights
 
-##### Line Distance apart
-I randomly chose XX pixels apart for my LOIs.
+### Line Distance apart
+I randomly chose 10 pixels apart for my LOIs.
+
+### Difficulties
+It was really difficult to determine my own ground truth sometimes...
+
+## LOI Recommendation
+So far - multiple LOIs and average the results.
+
