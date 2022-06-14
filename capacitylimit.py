@@ -32,7 +32,6 @@ class LineCrossing(object):
         self.model_modelfile_reid = cfg.get("reidentification_model_weights")
         self.model_configfile_reid = cfg.get("reidentification_model_description")
         self.coords = cfg.get("coords")
-#         self.adjustCoordinates()
         self.results = {}
         self.results2 = {}
         self.results3 = {}
@@ -95,7 +94,6 @@ class LineCrossing(object):
 
     def config_env(self, frame):
         h, w = frame.shape[:2]
-#         self.angleCoordinates()
         door_coords = ((int(self.coords[0][0] * w / 100), int(self.coords[0][1] * h / 100)),
                        (int(self.coords[1][0] * w / 100), int(self.coords[1][1] * h / 100)))
         self.door_line = InOutCalculator(door_coords)
@@ -105,9 +103,6 @@ class LineCrossing(object):
         proj = get_projection_point(lp[0], lp[1], .3)
         self.door_line.max_distance = int(proj["line"].length / 2)
         self.trackers = PersonTrackers(OrderedDict(), door_coords, self.line_above, self.line_below, callback_calc, callback2_calc, callback3_calc)
-
-
-
 
     def get_frame(self):
         h = w = None
@@ -193,7 +188,6 @@ class LineCrossing(object):
                 res = self.net_reid.requests[0].outputs[self.out_blob_reid]
                 tracker.reid = res
 
-
         self.trackers.similarity(trackers)
         door = list(self.door_line.line.coords)
         Draw.line(frame, (int(door[0][0]), int(door[0][1]), int(door[1][0]), int(door[1][1])), "yellow", 3)
@@ -202,7 +196,6 @@ class LineCrossing(object):
         Draw.data(frame, LineCrossing.results)
         Draw.dataBelow(frame, LineCrossing.results2)
         Draw.dataBelow2(frame, LineCrossing.results3)
-
 
         return frame
 
