@@ -191,12 +191,12 @@ class LineCrossing(object):
 
         self.trackers.similarity(trackers)
         door = list(self.door_line.line.coords)
-        Draw.line(frame, (int(door[0][0]), int(door[0][1]), int(door[1][0]), int(door[1][1])), "yellow", 3)
         Draw.line(frame, (int(self.line_above.coords[0][0]), int(self.line_above.coords[0][1]), int(self.line_above.coords[1][0]), int(self.line_above.coords[1][1])), "orange", 3)
+        Draw.line(frame, (int(door[0][0]), int(door[0][1]), int(door[1][0]), int(door[1][1])), "red", 3)
         Draw.line(frame, (int(self.line_below.coords[0][0]), int(self.line_below.coords[0][1]), int(self.line_below.coords[1][0]), int(self.line_below.coords[1][1])), "pink", 3)
+        Draw.dataAbove(frame, LineCrossing.results2)
         Draw.data(frame, LineCrossing.results)
-        Draw.dataBelow(frame, LineCrossing.results2)
-        Draw.dataBelow2(frame, LineCrossing.results3)
+        Draw.dataBelow(frame, LineCrossing.results3)
         Draw.dataAverage(frame, LineCrossing.average)
 
         return frame
