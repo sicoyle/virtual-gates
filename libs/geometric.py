@@ -11,7 +11,6 @@ from collections import deque
 def get_line(data):
     return LineString(data)
 
-
 def get_point(data):
     return Point(data)
 
@@ -55,6 +54,14 @@ def get_perpendicular_coords(p1, p2):
         d = cp.distance(get_point(p1))
         return {"a": None, "k": c[0], "pp1": (c[0], c[1]-d), "pp2": (c[0], c[1]+d)}
 
+def get_parallel_coords(p1, p2):
+    p3 = [p1[0], p1[1]-10]
+    p4 = [p2[0],p2[1]-10]
+#     p1 = (p1[1]-10)*1.0
+#     p2 = (p2[1]-10)*1.0
+    return get_line([p3,p4])
+#     return {"points": [p1,p2]}
+
 
 def get_projection_point(p1, p2, percent=.3):
     l = get_line([p1, p2])
@@ -72,6 +79,8 @@ def get_projection_point(p1, p2, percent=.3):
 class InOutCalculator(object):
     def __init__(self, line, first_point=None, max_distance=200):
         self.line = get_line(line)
+        self.line_above = self.get_above_line()
+
         self.zero_point = self.line.centroid
         self.perpendicular = self.get_axis_x()
         self.radius = self.get_radius()
@@ -80,6 +89,11 @@ class InOutCalculator(object):
 
         if first_point is not None:
             self.first_point = get_point(first_point)
+
+    def get_above_line(self):
+        p1, p2 = list(self.line.coords)
+        return get_parallel_coords(p1,p2)
+#         return get_line(l)
 
     def get_axis_x(self):
         p1, p2 = list(self.line.coords)
