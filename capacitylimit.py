@@ -201,19 +201,25 @@ class LineCrossing(object):
 
         return frame
 
-    def render(self, frame):
+    def render(self, frame, writer):
         cv2.namedWindow("output", cv2.WINDOW_NORMAL)
         frame = cv2.resize(frame, (960, 540))
         cv2.imshow("Frame", frame)
+        writer.write(frame)
+
         key = cv2.waitKey(1) & 0xFF
+        if key == ord('p'):
+                cv2.waitKey(-1) # wait until any key is pressed
         if key == ord("q"):
             exit()
 
     def run(self):
         self.load_openvino()
+        writer = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (960, 540))
         for frame in self.get_frame():
             frame = self.process_frame(frame)
-            self.render(frame)
+            self.render(frame, writer)
+        writer.release()
 
 def average(val1, val2, val3):
     return (val1 + val2 + val3) / 3
