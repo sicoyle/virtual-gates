@@ -95,6 +95,7 @@ class LineCrossing(object):
 
     def config_env(self, frame):
         h, w = frame.shape[:2]
+        # self.angleCoordinates()
         door_coords = ((int(self.coords[0][0] * w / 100), int(self.coords[0][1] * h / 100)),
                        (int(self.coords[1][0] * w / 100), int(self.coords[1][1] * h / 100)))
         self.door_line = InOutCalculator(door_coords)
