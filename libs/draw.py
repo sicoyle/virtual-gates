@@ -54,3 +54,10 @@ class Draw:
             cv2.putText(frame, text, (10, ((i * 20) + 60)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.6, COLOR["orange"], 2)
 
+    @staticmethod
+    def dataBelow2(frame, data):
+        for (i, (k, v)) in enumerate(data.items()):
+            text = "{}: {}".format(k, v)
+            cv2.putText(frame, text, (10, ((i * 20) + 100)),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, COLOR["pink"], 2)
+

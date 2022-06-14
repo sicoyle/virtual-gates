@@ -19,6 +19,7 @@ from openvino.inference_engine import IENetwork, IECore
 class LineCrossing(object):
     results = {"In": 0, "Out": 0}
     results2 = {"In": 0, "Out": 0}
+    results3 = {"In": 0, "Out": 0}
     def __init__(self):
         config_file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.json")
         with open(config_file_path) as f:
@@ -34,6 +35,7 @@ class LineCrossing(object):
 #         self.adjustCoordinates()
         self.results = {}
         self.results2 = {}
+        self.results3 = {}
         # OPENVINO VARS
         self.ov_input_blob = None
         self.out_blob = None
@@ -98,10 +100,11 @@ class LineCrossing(object):
                        (int(self.coords[1][0] * w / 100), int(self.coords[1][1] * h / 100)))
         self.door_line = InOutCalculator(door_coords)
         self.line_above = self.door_line.line_above
+        self.line_below = self.door_line.line_below
         lp = list(self.door_line.line.coords)
         proj = get_projection_point(lp[0], lp[1], .3)
         self.door_line.max_distance = int(proj["line"].length / 2)
-        self.trackers = PersonTrackers(OrderedDict(), door_coords, self.line_above, callback_calc, callback2_calc)
+        self.trackers = PersonTrackers(OrderedDict(), door_coords, self.line_above, self.line_below, callback_calc, callback2_calc, callback3_calc)
 
 
 
@@ -195,8 +198,10 @@ class LineCrossing(object):
         door = list(self.door_line.line.coords)
         Draw.line(frame, (int(door[0][0]), int(door[0][1]), int(door[1][0]), int(door[1][1])), "yellow", 3)
         Draw.line(frame, (int(self.line_above.coords[0][0]), int(self.line_above.coords[0][1]), int(self.line_above.coords[1][0]), int(self.line_above.coords[1][1])), "orange", 3)
+        Draw.line(frame, (int(self.line_below.coords[0][0]), int(self.line_below.coords[0][1]), int(self.line_below.coords[1][0]), int(self.line_below.coords[1][1])), "pink", 3)
         Draw.data(frame, LineCrossing.results)
         Draw.dataBelow(frame, LineCrossing.results2)
+        Draw.dataBelow2(frame, LineCrossing.results3)
 
 
         return frame
@@ -239,6 +244,18 @@ def callback2_calc(line_above, first, last):
     elif r == "N":
         print(f"Result Negative({r}) direction --> Out count")
         LineCrossing.results2["Out"] += 1
+
+def callback3_calc(line_below, first, last):
+    line3_calc = InOutCalculator(line_below, first)
+
+    r = line3_calc.evaluate(last)
+    if r == "P":
+        print(f"Result Positive({r}) direction  --> In count")
+        LineCrossing.results3["In"] += 1
+
+    elif r == "N":
+        print(f"Result Negative({r}) direction --> Out count")
+        LineCrossing.results3["Out"] += 1
 
 if __name__ == '__main__':
     try:
