@@ -31,8 +31,6 @@ Pictured below is what the final frame looks like for a single horizontal line f
 ![FinalFrame](./doc/images/singleLOI.jpg)
 
 ### Angled Line Results
-
-#### Single Angled Lines
 Difference for both counts is off by a lot here.
 > Note: This one was harder to determine the ground truth for a variety of reasons.
 
@@ -44,6 +42,9 @@ and the coordinate configuration set to `"coords": [[30, 45], [40, 45]]` for the
 | Angled line - red       | 1 - 5            |
 | ----------------------- | ---------------- |
 | My ground truth         | 3 - 4            |
+
+![AngledLOI](./doc/images/angledLOI.jpg)
+
 
 ### Multiple Line Results
 It appears that averaging the results does result in a better in/out count in this case.
