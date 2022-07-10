@@ -44,27 +44,41 @@ class Draw:
     def dataAbove(frame, data):
         for (i, (k, v)) in enumerate(data.items()):
             text = "{}: {}".format(k, v)
-            cv2.putText(frame, text, (10, ((i * 20) + 20)),
+            cv2.putText(frame, text, (10, ((i * 20) + 60)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.6, COLOR["orange"], 2)
 
     @staticmethod
     def data(frame, data):
         for (i, (k, v)) in enumerate(data.items()):
             text = "{}: {}".format(k, v)
-            cv2.putText(frame, text, (10, ((i * 20) + 60)),
+            cv2.putText(frame, text, (10, ((i * 20) + 100)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.6, COLOR["red"], 2)
 
     @staticmethod
     def dataBelow(frame, data):
         for (i, (k, v)) in enumerate(data.items()):
             text = "{}: {}".format(k, v)
-            cv2.putText(frame, text, (10, ((i * 20) + 100)),
+            cv2.putText(frame, text, (10, ((i * 20) + 140)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.6, COLOR["pink"], 2)
+
+    @staticmethod
+    def dataFirst(frame, data):
+        for (i, (k, v)) in enumerate(data.items()):
+            text = "{}: {}".format(k, v)
+            cv2.putText(frame, text, (10, ((i * 20) + 20)),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, COLOR["grey"], 2)
+
+    @staticmethod
+    def dataLast(frame, data):
+        for (i, (k, v)) in enumerate(data.items()):
+            text = "{}: {}".format(k, v)
+            cv2.putText(frame, text, (10, ((i * 20) + 180)),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, COLOR["magenta"], 2)
 
     @staticmethod
     def dataAverage(frame, data):
         for (i, (k, v)) in enumerate(data.items()):
             text = "{}: {}".format(k, v)
-            cv2.putText(frame, text, (10, ((i * 20) + 140)),
+            cv2.putText(frame, text, (10, ((i * 20) + 220)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.6, COLOR["white"], 2)
 

@@ -18,7 +18,7 @@ class TrackableObject:
 
 
 class PersonTrackers(object):
-    def __init__(self, trackers, line, line_above, line_below, callback=None, callback2=None, callback3=None):
+    def __init__(self, trackers, line, line_above, line_below, line_first, line_last, callback=None, callback2=None, callback3=None, callback4=None, callback5=None):
         self.trackers = trackers
         self.dissapeared = OrderedDict()
         self.trackId_generator = 0
@@ -27,9 +27,13 @@ class PersonTrackers(object):
         self.callback = callback
         self.callback2 = callback2
         self.callback3 = callback3
+        self.callback4 = callback4
+        self.callback5 = callback5
         self.line = line
         self.line_above = line_above
         self.line_below = line_below
+        self.line_first = line_first
+        self.line_last  = line_last
 
     def similarity(self, trackers):
         sim = deque()
@@ -99,6 +103,14 @@ class PersonTrackers(object):
             first = self.trackers[trackerId].centroids[0]
             last = self.trackers[trackerId].centroids[-1]
             self.callback3(self.line_below, first, last)
+        if self.callback4:
+            first = self.trackers[trackerId].centroids[0]
+            last = self.trackers[trackerId].centroids[-1]
+            self.callback4(self.line_first, first, last)
+        if self.callback5:
+            first = self.trackers[trackerId].centroids[0]
+            last = self.trackers[trackerId].centroids[-1]
+            self.callback5(self.line_last, first, last)
         del self.trackers[trackerId]
         del self.dissapeared[trackerId]
 

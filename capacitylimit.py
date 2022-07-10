@@ -20,6 +20,8 @@ class LineCrossing(object):
     results = {"In": 0, "Out": 0}
     results2 = {"In": 0, "Out": 0}
     results3 = {"In": 0, "Out": 0}
+    results4 = {"In": 0, "Out": 0}
+    results5 = {"In": 0, "Out": 0}
     average = {"In": 0, "Out": 0}
     def __init__(self):
         config_file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.json")
@@ -36,6 +38,8 @@ class LineCrossing(object):
         self.results = {}
         self.results2 = {}
         self.results3 = {}
+        self.results4 = {}
+        self.results5 = {}
         # OPENVINO VARS
         self.ov_input_blob = None
         self.out_blob = None
@@ -95,16 +99,18 @@ class LineCrossing(object):
 
     def config_env(self, frame):
         h, w = frame.shape[:2]
-        # self.angleCoordinates()
+#         self.angleCoordinates()
         door_coords = ((int(self.coords[0][0] * w / 100), int(self.coords[0][1] * h / 100)),
                        (int(self.coords[1][0] * w / 100), int(self.coords[1][1] * h / 100)))
         self.door_line = InOutCalculator(door_coords)
+        self.line_first = self.door_line.line_first
         self.line_above = self.door_line.line_above
         self.line_below = self.door_line.line_below
+        self.line_last = self.door_line.line_last
         lp = list(self.door_line.line.coords)
         proj = get_projection_point(lp[0], lp[1], .3)
         self.door_line.max_distance = int(proj["line"].length / 2)
-        self.trackers = PersonTrackers(OrderedDict(), door_coords, self.line_above, self.line_below, callback_calc, callback2_calc, callback3_calc)
+        self.trackers = PersonTrackers(OrderedDict(), door_coords, self.line_above, self.line_below, self.line_first, self.line_last, callback_calc, callback2_calc, callback3_calc, callback4_calc, callback5_calc)
 
     def get_frame(self):
         h = w = None
@@ -192,12 +198,16 @@ class LineCrossing(object):
 
         self.trackers.similarity(trackers)
         door = list(self.door_line.line.coords)
+        Draw.line(frame, (int(self.line_first.coords[0][0]), int(self.line_first.coords[0][1]), int(self.line_first.coords[1][0]), int(self.line_first.coords[1][1])), "grey", 3)
         Draw.line(frame, (int(self.line_above.coords[0][0]), int(self.line_above.coords[0][1]), int(self.line_above.coords[1][0]), int(self.line_above.coords[1][1])), "orange", 3)
         Draw.line(frame, (int(door[0][0]), int(door[0][1]), int(door[1][0]), int(door[1][1])), "red", 3)
         Draw.line(frame, (int(self.line_below.coords[0][0]), int(self.line_below.coords[0][1]), int(self.line_below.coords[1][0]), int(self.line_below.coords[1][1])), "pink", 3)
+        Draw.line(frame, (int(self.line_last.coords[0][0]), int(self.line_last.coords[0][1]), int(self.line_last.coords[1][0]), int(self.line_last.coords[1][1])), "magenta", 3)
+        Draw.dataFirst(frame, LineCrossing.results4)
         Draw.dataAbove(frame, LineCrossing.results2)
         Draw.data(frame, LineCrossing.results)
         Draw.dataBelow(frame, LineCrossing.results3)
+        Draw.dataLast(frame, LineCrossing.results5)
         Draw.dataAverage(frame, LineCrossing.average)
 
         return frame
@@ -222,8 +232,8 @@ class LineCrossing(object):
             self.render(frame, writer)
         writer.release()
 
-def average(val1, val2, val3):
-    return (val1 + val2 + val3) / 3
+def average(val1, val2, val3, val4, val5):
+    return (val1 + val2 + val3 + val4 + val5) / 5
 
 def callback_calc(line, first, last):
     line_calc = InOutCalculator(line, first)
@@ -232,12 +242,12 @@ def callback_calc(line, first, last):
     if r == "P":
         print(f"Result Positive({r}) direction  --> In count")
         LineCrossing.results["In"] += 1
-        LineCrossing.average["In"] = average(LineCrossing.results["In"], LineCrossing.results2["In"], LineCrossing.results3["In"])
+        LineCrossing.average["In"] = average(LineCrossing.results["In"], LineCrossing.results2["In"], LineCrossing.results3["In"], LineCrossing.results4["In"], LineCrossing.results5["In"])
 
     elif r == "N":
         print(f"Result Negative({r}) direction --> Out count")
         LineCrossing.results["Out"] += 1
-        LineCrossing.average["Out"] = average(LineCrossing.results["Out"], LineCrossing.results2["Out"], LineCrossing.results3["Out"])
+        LineCrossing.average["Out"] = average(LineCrossing.results["Out"], LineCrossing.results2["Out"], LineCrossing.results3["Out"], LineCrossing.results4["In"], LineCrossing.results5["In"])
 
 def callback2_calc(line_above, first, last):
     line2_calc = InOutCalculator(line_above, first)
@@ -246,12 +256,12 @@ def callback2_calc(line_above, first, last):
     if r == "P":
         print(f"Result Positive({r}) direction  --> In count")
         LineCrossing.results2["In"] += 1
-        LineCrossing.average["In"] = average(LineCrossing.results["In"], LineCrossing.results2["In"], LineCrossing.results3["In"])
+        LineCrossing.average["In"] = average(LineCrossing.results["In"], LineCrossing.results2["In"], LineCrossing.results3["In"], LineCrossing.results4["In"], LineCrossing.results5["In"])
 
     elif r == "N":
         print(f"Result Negative({r}) direction --> Out count")
         LineCrossing.results2["Out"] += 1
-        LineCrossing.average["Out"] = average(LineCrossing.results["Out"], LineCrossing.results2["Out"], LineCrossing.results3["Out"])
+        LineCrossing.average["Out"] = average(LineCrossing.results["Out"], LineCrossing.results2["Out"], LineCrossing.results3["Out"], LineCrossing.results4["In"], LineCrossing.results5["In"])
 
 def callback3_calc(line_below, first, last):
     line3_calc = InOutCalculator(line_below, first)
@@ -260,12 +270,42 @@ def callback3_calc(line_below, first, last):
     if r == "P":
         print(f"Result Positive({r}) direction  --> In count")
         LineCrossing.results3["In"] += 1
-        LineCrossing.average["In"] = average(LineCrossing.results["In"], LineCrossing.results2["In"], LineCrossing.results3["In"])
+        LineCrossing.average["In"] = average(LineCrossing.results["In"], LineCrossing.results2["In"], LineCrossing.results3["In"], LineCrossing.results4["In"], LineCrossing.results5["In"])
 
     elif r == "N":
         print(f"Result Negative({r}) direction --> Out count")
         LineCrossing.results3["Out"] += 1
-        LineCrossing.average["Out"] = average(LineCrossing.results["Out"], LineCrossing.results2["Out"], LineCrossing.results3["Out"])
+        LineCrossing.average["Out"] = average(LineCrossing.results["Out"], LineCrossing.results2["Out"], LineCrossing.results3["Out"], LineCrossing.results4["In"], LineCrossing.results5["In"])
+
+def callback4_calc(line_first, first, last):
+    line4_calc = InOutCalculator(line_first, first)
+
+    r = line4_calc.evaluate(last)
+    if r == "P":
+        print(f"Result Positive({r}) direction  --> In count")
+        LineCrossing.results4["In"] += 1
+        LineCrossing.average["In"] = average(LineCrossing.results["In"], LineCrossing.results2["In"], LineCrossing.results3["In"], LineCrossing.results4["In"], LineCrossing.results5["In"])
+
+    elif r == "N":
+        print(f"Result Negative({r}) direction --> Out count")
+        LineCrossing.results4["Out"] += 1
+        LineCrossing.average["Out"] = average(LineCrossing.results["Out"], LineCrossing.results2["Out"], LineCrossing.results3["Out"], LineCrossing.results4["In"], LineCrossing.results5["In"])
+
+
+def callback5_calc(line_last, first, last):
+    line5_calc = InOutCalculator(line_last, first)
+
+    r = line5_calc.evaluate(last)
+    if r == "P":
+        print(f"Result Positive({r}) direction  --> In count")
+        LineCrossing.results5["In"] += 1
+        LineCrossing.average["In"] = average(LineCrossing.results["In"], LineCrossing.results2["In"], LineCrossing.results3["In"], LineCrossing.results4["In"], LineCrossing.results5["In"])
+
+    elif r == "N":
+        print(f"Result Negative({r}) direction --> Out count")
+        LineCrossing.results5["Out"] += 1
+        LineCrossing.average["Out"] = average(LineCrossing.results["Out"], LineCrossing.results2["Out"], LineCrossing.results3["Out"], LineCrossing.results4["In"], LineCrossing.results5["In"])
+
 
 if __name__ == '__main__':
     try:

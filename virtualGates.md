@@ -1,6 +1,6 @@
 # Virtual Gate Research
 
-To angle the line of interest (LOI), uncomment line 98 of capacitylimit.py.
+To angle the line of interest (LOI), uncomment line 98]]102 of capacitylimit.py.
 A future optimization could be to add a flag to toggle between the different types of lines of interest implementations.
 
 ## Directions
@@ -52,6 +52,8 @@ It appears that averaging the results does result in a better in/out count in th
 The table below was captured using `072352396-people-pedestrian-zone.mp4`,
 and the coordinate configuration set to `"coords": [[20, 45], [40, 45]]` for the LOI.
 
+#### 3 Lines of Interest
+
 | Line of Interest      | In - Out Count |
 |-----------------------|----------------|
 | Line above - orange   | 3 - 5          |
@@ -61,9 +63,24 @@ and the coordinate configuration set to `"coords": [[20, 45], [40, 45]]` for the
 | Average count         | 3.66 - 5.33    |
 | My ground truth       | 3 - 5          |
 
-Pictured below is what I considered to be my ground truth counts.
-
 ![SamGroundTruth](./doc/images/samGroundTruthMultLOI.jpg)
+
+#### 5 Lines of Interest
+
+| Line of Interest        | In - Out Count   |
+|-------------------------|------------------|
+ | First line - grey       | 3 - 4            |
+| Line above - orange     | 3 - 5            |
+| Middle line - red       | 4 - 6            |
+| Below line - pink       | 4 - 5            |
+ | Last line - magenta     | 4 - 5            |
+| ----------------------- | ---------------- |
+| Average count           | 3.6 - 4.2        |
+| My ground truth         | 3 - 5            |
+
+![SamGroundTruth](./doc/images/5LOI.jpg)
+
+It appears that 3 lines of interest is slightly more accurate than 5 lines of interest in this example.
 
 People circled in purple were counted as `In`.
 People circled in blue were counted as `Out`.
