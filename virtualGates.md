@@ -1,6 +1,6 @@
 # Virtual Gate Research
 
-To angle the line of interest (LOI), uncomment line 98]]102 of capacitylimit.py.
+To angle the line of interest (LOI), uncomment line 102 of capacitylimit.py.
 A future optimization could be to add a flag to toggle between the different types of lines of interest implementations.
 
 ## Directions
