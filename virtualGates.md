@@ -15,7 +15,7 @@ A future optimization could be to add a flag to toggle between the different typ
 4. 2D vs 3D - TODO?
 
 ### Straight Line Results
-Difference for both counts if off by one here.
+Difference for both counts is off by one here.
 
 The table below was captured using `072352396-people-pedestrian-zone.mp4`,
 and the coordinate configuration set to `"coords": [[20, 45], [40, 45]]` for the LOI.
